@@ -16,7 +16,7 @@ CONFIG_PACKAGE_luci-app-homeproxy=n
 CONFIG_PACKAGE_luci-app-samba4=n
 CONFIG_PACKAGE_luci-app-cpufreq=n
 CONFIG_PACKAGE_luci-app-wolplus=n
-CONFIG_PACKAGE_luci-app-tailscale=n
+CONFIG_PACKAGE_luci-app-tailscale=y
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-advancedplus=n
 #删除插件
