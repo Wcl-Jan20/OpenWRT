@@ -1,7 +1,7 @@
 # OpenWRT-CI
 云编译OpenWRT固件
 
-IPQ/MTK硬件加速！
+IPQ/MTK系列支持硬件加速！
 
 # 固件简要说明：
 
