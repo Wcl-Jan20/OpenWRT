@@ -32,8 +32,8 @@ jobs:
       fail-fast: false
       #max-parallel: 3
       matrix:
-        CONFIG: [Fine3399, ROCKCHIP, X86]
-        SOURCE: [VIKINGYFY/immortalwrt]
+        CONFIG: [Fine3399]
+        SOURCE: [Wcl-Jan20/immortalwrt]
         BRANCH: [owrt]
 
     #调用公用编译核心WRT-CORE-imm.yml
