@@ -163,7 +163,7 @@ jobs:
         run: |
           cd ./wrt/
 
-          cat $GITHUB_WORKSPACE/Config/$WRT_CONFIG.txt $GITHUB_WORKSPACE/Config/GENERAL.txt >> .config
+          cat $GITHUB_WORKSPACE/Config/$WRT_CONFIG.txt $GITHUB_WORKSPACE/Config/GENERAL-360.txt >> .config
 
           $GITHUB_WORKSPACE/Scripts/Settings.sh
 
