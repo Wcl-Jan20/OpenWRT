@@ -1,5 +1,5 @@
 #云编译公用核心
-name: WRT-CORE-360
+name: WRT-CORE-360T7
 
 on:
   workflow_call:
@@ -163,7 +163,7 @@ jobs:
         run: |
           cd ./wrt/
 
-          cat $GITHUB_WORKSPACE/Config/$WRT_CONFIG.txt $GITHUB_WORKSPACE/Config/GENERAL-360.txt >> .config
+          cat $GITHUB_WORKSPACE/Config/$WRT_CONFIG.txt $GITHUB_WORKSPACE/Config/GENERAL-360T7.txt >> .config
 
           $GITHUB_WORKSPACE/Scripts/Settings.sh
 
