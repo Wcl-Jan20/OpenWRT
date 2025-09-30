@@ -7,11 +7,6 @@ on:
   # 手动触发，可自定义保留数量/按天清理
   workflow_dispatch:
     inputs:
-      NUMBER:
-        description: '保留最新的 Release 数量（与按天清理可叠加）'
-        default: 0
-        required: false
-        type: number
       AGE_DAYS:
         description: '删除超过 N 天的 Release（0 表示不按天删除）'
         default: 7
