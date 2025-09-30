@@ -41,7 +41,7 @@ jobs:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           delete_releases: true
           releases_keep_latest: ${{ inputs.NUMBER || 0 }}
-          delete_tags: false               # 默认不删 tag，按需改成 true
+          delete_tags: true               # 默认不删 tag，按需改成 true
           delete_workflows: true
           workflows_keep_day: 7            # 保留近 7 天的工作流运行和 artifacts
 
