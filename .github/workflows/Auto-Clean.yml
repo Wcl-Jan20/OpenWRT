@@ -1,18 +1,35 @@
 name: Auto-Clean
 
 on:
-  #自动清理：每天早上6点
+  # 每天 06:00 CST 运行（UTC 22:00）
   schedule:
-    - cron: 0 22 * * *
-  #手动清理
+    - cron: '0 22 * * *'
+  # 手动触发，可自定义保留数量/按天清理
   workflow_dispatch:
     inputs:
       NUMBER:
-        default: '0'
+        description: '保留最新的 Release 数量（与按天清理可叠加）'
+        default: 0
         required: false
-        type: string
+        type: number
+      AGE_DAYS:
+        description: '删除超过 N 天的 Release（0 表示不按天删除）'
+        default: 7
+        required: false
+        type: number
+      DELETE_TAG_WITH_RELEASE:
+        description: '删除 Release 时同步删除同名 tag'
+        default: true
+        required: false
+        type: boolean
 
-permissions: write-all
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: auto-clean
+  cancel-in-progress: false
 
 jobs:
   auto_clean:
@@ -21,9 +38,63 @@ jobs:
       - name: Delete old Releases and Workflows
         uses: ophub/delete-releases-workflows@main
         with:
-          gh_token: ${{secrets.GITHUB_TOKEN}}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
           delete_releases: true
-          releases_keep_latest: ${{inputs.NUMBER || '0'}}
-          delete_tags: true
+          releases_keep_latest: ${{ inputs.NUMBER || 0 }}
+          delete_tags: false               # 默认不删 tag，按需改成 true
           delete_workflows: true
-          workflows_keep_day: 0
+          workflows_keep_day: 7            # 保留近 7 天的工作流运行和 artifacts
+
+  clean_releases_by_age:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Delete releases older than AGE_DAYS
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const days = Number(process.env.AGE_DAYS);
+            if (!days || days <= 0) {
+              console.log('AGE_DAYS disabled, skip.');
+              return;
+            }
+            const cutoff = Date.now() - days*24*60*60*1000;
+            let page = 1, deleted = 0;
+            while (true) {
+              const { data: releases } = await github.rest.repos.listReleases({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+                page
+              });
+              if (!releases.length) break;
+              for (const r of releases) {
+                if (new Date(r.created_at).getTime() < cutoff) {
+                  console.log(`Deleting release ${r.tag_name} (${r.name || r.tag_name}) created at ${r.created_at}`);
+                  await github.rest.repos.deleteRelease({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    release_id: r.id
+                  });
+                  if (process.env.DELETE_TAG_WITH_RELEASE === 'true' && r.tag_name) {
+                    try {
+                      await github.rest.git.deleteRef({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        ref: `tags/${r.tag_name}`
+                      });
+                    } catch (e) {
+                      console.log(`Delete tag failed: ${e.message}`);
+                    }
+                  }
+                  deleted++;
+                }
+              }
+              page++;
+            }
+            console.log(`Deleted ${deleted} releases older than ${days} days.`);
+        env:
+          AGE_DAYS: ${{ inputs.AGE_DAYS || 7 }}
+          DELETE_TAG_WITH_RELEASE: ${{ inputs.DELETE_TAG_WITH_RELEASE || false }}
