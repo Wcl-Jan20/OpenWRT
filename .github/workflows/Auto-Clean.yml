@@ -4,7 +4,7 @@ on:
   # 每天 06:00 CST 运行（UTC 22:00）
   schedule:
     - cron: '0 22 * * *'
-  # 手动触发，可自定义保留数量/按天清理
+  # 手动触发，按天清理
   workflow_dispatch:
     inputs:
       AGE_DAYS:
