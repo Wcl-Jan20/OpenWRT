@@ -1,8 +1,5 @@
 #自用插件
 CONFIG_USE_APK=n
-#CONFIG_PACKAGE_libip4tc=y
-#CONFIG_PACKAGE_libip6tc=y
-#CONFIG_PACKAGE_luci-lib-json=y
 CONFIG_PACKAGE_luci-compat=y
 CONFIG_PACKAGE_luci-mod-rpc=y
 CONFIG_PACKAGE_luci-lib-ipkg=y
