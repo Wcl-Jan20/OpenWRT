@@ -115,3 +115,4 @@ UPDATE_VERSION() {
 #UPDATE_VERSION "软件包名" "测试版，true，可选，默认为否"
 UPDATE_VERSION "sing-box"
 UPDATE_VERSION "tailscale"
+curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
