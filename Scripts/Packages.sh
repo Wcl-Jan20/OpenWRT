@@ -125,4 +125,4 @@ UPDATE_VERSION() {
 UPDATE_VERSION "sing-box"
 # UPDATE_VERSION "tailscale"
 # fw4 turboacc不带sfe
-curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
+#curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
