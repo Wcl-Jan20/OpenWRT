@@ -80,7 +80,7 @@ UPDATE_PACKAGE "luci-app-dockerman" "lisaac/luci-app-dockerman" "master"
 #UPDATE_PACKAGE "luci-app-timecontrol" "sirpdboy/luci-app-timecontrol" "main"
 #UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
 UPDATE_PACKAGE "luci-app-ap-modem" "kenzok8/small-package" "main" "pkg"
-UPDATE_PACKAGE "luci-app-turboacc" "chenmozhijin/turboacc" "luci"
+#UPDATE_PACKAGE "luci-app-turboacc" "chenmozhijin/turboacc" "luci"
 
 if [[ $WRT_REPO != *"immortalwrt"* ]]; then
 	UPDATE_PACKAGE "qmi-wwan" "immortalwrt/wwan-packages" "master" "pkg"
