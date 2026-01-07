@@ -228,7 +228,7 @@ jobs:
           tag_name: ${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-${{env.WRT_BRANCH}}-${{env.WRT_DATE}}
           files: ./wrt/upload/*.*
           body: |
-            平台：${{env.WRT_TARGET}}
+            设备平台：${{env.WRT_TARGET}}
             登录地址：${{env.WRT_IP}}
             登录密码：${{env.WRT_PW}}
             WIFI名称：${{env.WRT_SSID}}
