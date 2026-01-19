@@ -57,6 +57,7 @@ UPDATE_PACKAGE "openclash" "vernesong/OpenClash" "dev" "pkg"
 UPDATE_PACKAGE "passwall" "xiaorouji/openwrt-passwall" "main" "pkg"
 UPDATE_PACKAGE "passwall2" "xiaorouji/openwrt-passwall2" "main" "pkg"
 
+UPDATE_PACKAGE "sing-box" "77160860/OpenWRT" "main" "pkg"
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
 #UPDATE_PACKAGE "luci-app-store" "kenzok8/small-package" "main" "pkg"
 UPDATE_PACKAGE "luci-app-oaf" "destan19/OpenAppFilter" "master"
@@ -119,5 +120,5 @@ UPDATE_VERSION() {
 }
 
 #UPDATE_VERSION "软件包名" "测试版，true，可选，默认为否"
-UPDATE_VERSION "sing-box"
+#UPDATE_VERSION "sing-box"
 #UPDATE_VERSION "tailscale"
