@@ -58,6 +58,7 @@ UPDATE_PACKAGE "passwall" "xiaorouji/openwrt-passwall" "main" "pkg"
 UPDATE_PACKAGE "passwall2" "xiaorouji/openwrt-passwall2" "main" "pkg"
 
 UPDATE_PACKAGE "sing-box" "77160860/OpenWRT" "main" "pkg"
+UPDATE_PACKAGE "luci-app-tvgate" "qist/luci-app-tvgate" "main"
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
 #UPDATE_PACKAGE "luci-app-store" "kenzok8/small-package" "main" "pkg"
 UPDATE_PACKAGE "luci-app-oaf" "destan19/OpenAppFilter" "master"
