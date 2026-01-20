@@ -32,8 +32,19 @@ if [ -d *"luci-theme-argon"* ]; then
 
 	sed -i "s/primary '.*'/primary '#31a1a1'/; s/'0.2'/'0.5'/; s/'none'/'bing'/; s/'600'/'normal'/" ./luci-app-argon-config/root/etc/config/argon
 
+	#替换argon主题背景（使用仓库根目录的 bg.webp）
+	CUSTOM_BG="$GITHUB_WORKSPACE/bg.webp"
+	if [ -f "$CUSTOM_BG" ] && [ -d ./htdocs/luci-static/argon/img ]; then
+		cp -f "$CUSTOM_BG" ./htdocs/luci-static/argon/img/bg.webp
+		echo "argon bg replaced!"
+	else
+		[ -f "$CUSTOM_BG" ] || echo "custom bg not found: $CUSTOM_BG"
+		[ -d ./htdocs/luci-static/argon/img ] || echo "argon img dir missing: ./htdocs/luci-static/argon/img"
+	fi
+
 	cd $PKG_PATH && echo "theme-argon has been fixed!"
 fi
+
 
 #修改qca-nss-drv启动顺序
 NSS_DRV="../feeds/nss_packages/qca-nss-drv/files/qca-nss-drv.init"
