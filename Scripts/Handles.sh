@@ -25,26 +25,27 @@ if [ -d *"homeproxy"* ]; then
 fi
 
 #修改argon主题字体和颜色
-if [ -d *"luci-theme-argon"* ]; then
+if [ -d "luci-theme-argon" ]; then
 	echo " "
 
-	cd ./luci-theme-argon/
+	cd "luci-theme-argon/" || exit 1
 
 	sed -i "s/primary '.*'/primary '#31a1a1'/; s/'0.2'/'0.5'/; s/'none'/'bing'/; s/'600'/'normal'/" ./luci-app-argon-config/root/etc/config/argon
 
 	#替换argon主题背景（使用仓库根目录的 bg.webp）
 	CUSTOM_BG="$GITHUB_WORKSPACE/bg.webp"
-	if [ -f "$CUSTOM_BG" ] && [ -d ./htdocs/luci-static/argon/img ]; then
-		cp -f "$CUSTOM_BG" ./htdocs/luci-static/argon/img/bg.webp
-		echo "argon bg replaced!"
+	ARGON_BG="./luci-theme-argon/htdocs/luci-static/argon/img/bg.webp"
+
+	if [ -f "$CUSTOM_BG" ] && [ -f "$ARGON_BG" ]; then
+		cp -f "$CUSTOM_BG" "$ARGON_BG"
+		echo "argon bg replaced: $ARGON_BG"
 	else
 		[ -f "$CUSTOM_BG" ] || echo "custom bg not found: $CUSTOM_BG"
-		[ -d ./htdocs/luci-static/argon/img ] || echo "argon img dir missing: ./htdocs/luci-static/argon/img"
+		[ -f "$ARGON_BG" ] || echo "argon bg not found: $ARGON_BG"
 	fi
 
-	cd $PKG_PATH && echo "theme-argon has been fixed!"
+	cd "$PKG_PATH" && echo "theme-argon has been fixed!"
 fi
-
 
 #修改qca-nss-drv启动顺序
 NSS_DRV="../feeds/nss_packages/qca-nss-drv/files/qca-nss-drv.init"
