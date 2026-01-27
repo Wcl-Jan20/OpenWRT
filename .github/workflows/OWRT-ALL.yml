@@ -20,10 +20,6 @@ on:
         default: 'false'
         required: false
         type: boolean
-      VERSION:
-        description: '自定义固件版本号'
-        required: false
-        type: string
 
 #CI权限
 permissions: write-all
@@ -67,5 +63,3 @@ jobs:
       WRT_PACKAGE: ${{inputs.PACKAGE}}
       #仅输出配置文件
       WRT_TEST: ${{inputs.TEST}}
-      #传递版本号参数
-      WRT_VER: ${{inputs.VERSION}}
