@@ -42,6 +42,8 @@ sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 sed -i '/Target Platform/d' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 sed -i '38,47d' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 rm -rf feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/25_storage.js
+sed -i 's/ECM://g' target/linux/qualcommax/base-files/sbin/cpuusage
+sed -i 's/HWE/NPU/g' target/linux/qualcommax/base-files/sbin/cpuusage
 
 CFG_FILE="./package/base-files/files/bin/config_generate"
 #修改默认IP地址
