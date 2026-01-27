@@ -33,7 +33,7 @@ jobs:
       #max-parallel: 3
       matrix:
         CONFIG: [MEDIATEK, ROCKCHIP]
-        SOURCE: [VIKINGYFY/immortalwrt]
+        SOURCE: [77160860/immortalwrt]
         BRANCH: [owrt]
 
     #调用公用编译核心WRT-CORE.yml
