@@ -12,8 +12,8 @@ if [ -n "$WRT_VER" ]; then
 else
     VERSION_STR="$WRT_DATE"
 fi
-#如果WRT_VER变量为空则用 WRT_DATE
-sed -i "s/(luciversion[[:space:]]*||[[:space:]]*'')/'WRT $VERSION_STR'/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
+# 将Luci版本显示为空
+sed -i "s/(luciversion[[:space:]]*||[[:space:]]*'')/''/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
 #sed -i "s/(luciversion[[:space:]]*||[[:space:]]*'')/'$WRT_DATE'/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
 
 WIFI_SH=$(find ./target/linux/{mediatek/filogic,qualcommax}/base-files/etc/uci-defaults/ -type f -name "*set-wireless.sh" 2>/dev/null)
@@ -54,6 +54,11 @@ echo "CONFIG_PACKAGE_luci=y" >> ./.config
 echo "CONFIG_LUCI_LANG_zh_Hans=y" >> ./.config
 echo "CONFIG_PACKAGE_luci-theme-$WRT_THEME=y" >> ./.config
 echo "CONFIG_PACKAGE_luci-app-$WRT_THEME-config=y" >> ./.config
+
+# 自定义固件版本描述 (覆盖 ImmortalWrt SNAPSHOT...)
+echo "CONFIG_VERSION_DIST='WRT'" >> ./.config
+echo "CONFIG_VERSION_NUMBER='$VERSION_STR'" >> ./.config
+echo "CONFIG_VERSION_CODE=''" >> ./.config
 
 #手动调整的插件
 if [ -n "$WRT_PACKAGE" ]; then
