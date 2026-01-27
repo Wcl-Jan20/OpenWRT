@@ -7,14 +7,7 @@ sed -i "s/luci-theme-bootstrap/luci-theme-$WRT_THEME/g" $(find ./feeds/luci/coll
 #修改immortalwrt.lan关联IP
 sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $(find ./feeds/luci/modules/luci-mod-system/ -type f -name "flash.js")
 #添加编译日期标识
-if [ -n "$WRT_VER" ]; then
-    VERSION_STR="$WRT_VER"
-else
-    VERSION_STR="$WRT_DATE"
-fi
-#将Luci版本显示为空 同时去除 " / " 分隔符和 luciversion 变量
-sed -i "s/ \+ ' \/ '//g; s/ \+ (luciversion || '')//g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
-#sed -i "s/(luciversion[[:space:]]*||[[:space:]]*'')/'$WRT_DATE'/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
+sed -i "s/(luciversion[[:space:]]*||[[:space:]]*'')/'$WRT_DATE'/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
 
 WIFI_SH=$(find ./target/linux/{mediatek/filogic,qualcommax}/base-files/etc/uci-defaults/ -type f -name "*set-wireless.sh" 2>/dev/null)
 WIFI_UC="./package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc"
@@ -56,14 +49,6 @@ echo "CONFIG_PACKAGE_luci=y" >> ./.config
 echo "CONFIG_LUCI_LANG_zh_Hans=y" >> ./.config
 echo "CONFIG_PACKAGE_luci-theme-$WRT_THEME=y" >> ./.config
 echo "CONFIG_PACKAGE_luci-app-$WRT_THEME-config=y" >> ./.config
-
-# 自定义固件版本描述 (覆盖 ImmortalWrt SNAPSHOT...)
-sed -i '/CONFIG_VERSION_DIST/d' ./.config
-sed -i '/CONFIG_VERSION_NUMBER/d' ./.config
-sed -i '/CONFIG_VERSION_CODE/d' ./.config
-echo 'CONFIG_VERSION_DIST="WRT"' >> ./.config
-echo "CONFIG_VERSION_NUMBER=\"$VERSION_STR\"" >> ./.config
-echo 'CONFIG_VERSION_CODE=""' >> ./.config
 
 #手动调整的插件
 if [ -n "$WRT_PACKAGE" ]; then
