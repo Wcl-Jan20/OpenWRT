@@ -18,11 +18,11 @@ on:
         description: '手动调整插件包，多个请用\n符号隔开。'
         required: false
         type: string
-      TEST:
-        description: '仅输出配置文件，不编译固件。'
-        default: 'false'
+      COMMIT_HASH:
+        description: '源码Commit Hash(留空则默认使用分支最新代码)'
         required: false
-        type: boolean
+        type: string
+        default: ''
 
 #CI权限
 permissions: write-all
@@ -64,5 +64,3 @@ jobs:
       WRT_SOURCE: ${{matrix.SOURCE}}
       #插件调整
       WRT_PACKAGE: ${{inputs.PACKAGE}}
-      #仅输出配置文件
-      WRT_TEST: ${{inputs.TEST}}
