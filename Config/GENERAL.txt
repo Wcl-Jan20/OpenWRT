@@ -1,6 +1,6 @@
 #自用插件
-CONFIG_USE_APK=y
-CONFIG_PACKAGE_luci-lib-ipkg=n
+CONFIG_USE_APK=n
+CONFIG_PACKAGE_luci-lib-ipkg=y
 CONFIG_PACKAGE_zoneinfo-asia=y
 CONFIG_PACKAGE_luci-mod-rpc=y
 #科学插件调整
