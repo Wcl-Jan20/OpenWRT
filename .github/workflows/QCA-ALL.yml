@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       #max-parallel: 3
       matrix:
-        CONFIG: [IPQ60XX-WIFI-YES, IPQ807X-WIFI-YES]
+        CONFIG: [IPQ60XX, IPQ807X]
         SOURCE: [77160860/immortalwrt]
         BRANCH: [main]
 
@@ -49,7 +49,7 @@ jobs:
       #默认主机名
       WRT_NAME: WRT
       #默认WIFI名称
-      WRT_SSID: WRT
+      WRT_SSID: W
       #默认WIFI密码
       WRT_WORD: 1234567890
       #默认地址
