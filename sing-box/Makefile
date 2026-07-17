@@ -7,10 +7,11 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=sing-box
 PKG_VERSION:=1.14.0
 PKG_RELEASE:=1
+PKG_NO_CHECKSUM:=1
 
-ifeq ($(ARCH),aarch64)
+ifneq ($(findstring aarch64,$(ARCH)),)
   PKG_SOURCE:=sing-box-arm64
-else ifeq ($(ARCH),x86_64)
+else ifneq ($(findstring x86_64,$(ARCH)),)
   PKG_SOURCE:=sing-box-amd64
 else
   PKG_SOURCE:=sing-box-unsupported
@@ -28,12 +29,13 @@ define Package/sing-box
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Web Servers/Proxies
-  TITLE:=Sing-box (Pre-compiled Binary)
-  DEPENDS:=+ca-bundle +kmod-tun +kmod-inet-diag +kmod-netlink-diag @(aarch64||x86_64)
+  TITLE:=sing-box (Pre-compiled Binary)
+  URL:=https://github.com/77160860/proxy
+  DEPENDS:=+ca-bundle +kmod-tun +kmod-inet-diag +kmod-netlink-diag
 endef
 
 define Package/sing-box/description
-  Sing-box pre-compiled binary for ARM64 and x86_64.
+  Sing-box pre-compiled binary for ARM64 and AMD64.
   Downloaded from custom repository.
 endef
 
@@ -43,6 +45,12 @@ define Package/sing-box/conffiles
 endef
 
 define Build/Prepare
+	@if [ "$(PKG_SOURCE)" = "sing-box-unsupported" ]; then \
+		echo "=================================================" >&2; \
+		echo "【错误】当前架构 ($(ARCH)) 不支持，无法编译sing-box！" >&2; \
+		echo "=================================================" >&2; \
+		exit 1; \
+	fi
 	mkdir -p $(PKG_BUILD_DIR)
 	cp $(DL_DIR)/$(PKG_SOURCE) $(PKG_BUILD_DIR)/sing-box
 	chmod +x $(PKG_BUILD_DIR)/sing-box
@@ -58,7 +66,7 @@ endef
 
 define Package/sing-box/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	# 安装sing-box主程序
+	# 安装sing-box
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sing-box $(1)/usr/bin/sing-box
 
 	# 安装配置文件
