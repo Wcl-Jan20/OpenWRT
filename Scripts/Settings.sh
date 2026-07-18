@@ -76,6 +76,9 @@ fi
 sed -i 's/option rebind_protection 1/option rebind_protection 0/g' package/network/services/dnsmasq/files/dhcp.conf
 sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 
+#去掉luci版本后缀
+sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+
 #禁用zram开机自启
 if [ -f "include/rootfs.mk" ]; then
     sed -i '/clean_ipkg,\$(1)/a \	rm -f \$(1)/etc/rc.d/S15zram' include/rootfs.mk
