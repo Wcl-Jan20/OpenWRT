@@ -86,9 +86,11 @@ if [ -f "package/system/zram-swap/files/zram.init" ]; then
       package/system/zram-swap/files/zram.init
 fi
 
-#禁用mtk平台sqm nss-zk
-if grep -q "^CONFIG_PACKAGE_sqm-scripts-nss=" .config; then
-    sed -i 's/^CONFIG_PACKAGE_sqm-scripts-nss=.*/CONFIG_PACKAGE_sqm-scripts-nss=n/' .config
-else
-    echo "CONFIG_PACKAGE_sqm-scripts-nss=n" >> .config
+# 禁用 mtk、rk、x86 平台的 sqm nss
+if grep -qE "^CONFIG_TARGET_(mediatek|rockchip|x86)=y" .config; then
+    if grep -q "^CONFIG_PACKAGE_sqm-scripts-nss=" .config; then
+        sed -i 's/^CONFIG_PACKAGE_sqm-scripts-nss=.*/CONFIG_PACKAGE_sqm-scripts-nss=n/' .config
+    else
+        echo "CONFIG_PACKAGE_sqm-scripts-nss=n" >> .config
+    fi
 fi
