@@ -67,24 +67,25 @@ fi
 sed -i '/Target Platform/d' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 sed -i '38,47d' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 rm -rf feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/25_storage.js
-sed -i 's/ECM://g' target/linux/qualcommax/base-files/sbin/cpuusage
-sed -i 's/HWE/NPU/g' target/linux/qualcommax/base-files/sbin/cpuusage
+if [ -f "target/linux/qualcommax/base-files/sbin/cpuusage" ]; then
+	sed -i 's/ECM://g' target/linux/qualcommax/base-files/sbin/cpuusage
+	sed -i 's/HWE/NPU/g' target/linux/qualcommax/base-files/sbin/cpuusage
+fi
 
 #关闭重绑定保护及缓存
 sed -i 's/option rebind_protection 1/option rebind_protection 0/g' package/network/services/dnsmasq/files/dhcp.conf
 sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
-
-#去掉luci版本后缀
-sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
 #禁用zram开机自启
 if [ -f "include/rootfs.mk" ]; then
     sed -i '/clean_ipkg,\$(1)/a \	rm -f \$(1)/etc/rc.d/S15zram' include/rootfs.mk
 fi
 
-# 禁用 mtk、rk、x86 平台的 sqm nss
-if grep -qE "^CONFIG_TARGET_(mediatek|rockchip|x86)=y" .config; then
-    if grep -q "^CONFIG_PACKAGE_sqm-scripts-nss=" .config; then
-        sed -i 's/^CONFIG_PACKAGE_sqm-scripts-nss=.*/CONFIG_PACKAGE_sqm-scripts-nss=n/' .config
+#禁用 mtk、rk、x86 平台的 luci-app-sqm
+if grep -qE "^CONFIG_TARGET_(mediatek|rockchip|x86).*=y" .config; then
+    if grep -q "^CONFIG_PACKAGE_luci-app-sqm=" .config; then
+        sed -i 's/^CONFIG_PACKAGE_luci-app-sqm=.*/CONFIG_PACKAGE_luci-app-sqm=n/' .config
     else
-        echo "CONFIG_PACKAGE_sqm-scripts-nss=n" >> .config
+        echo "CONFIG_PACKAGE_luci-app-sqm=n" >> .config
+    fi
+fi
