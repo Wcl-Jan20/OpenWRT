@@ -90,12 +90,3 @@ if grep -qE "^CONFIG_TARGET_(mediatek|rockchip|x86).*=y" .config; then
         echo "CONFIG_PACKAGE_luci-app-sqm=n" >> .config
     fi
 fi
-
-#qualcommax平台将 sqm-scripts 设为 n
-if grep -qE "^CONFIG_TARGET_qualcommax.*=y" .config; then
-    if grep -q "^CONFIG_PACKAGE_sqm-scripts=" .config; then
-        sed -i 's/^CONFIG_PACKAGE_sqm-scripts=.*/CONFIG_PACKAGE_sqm-scripts=n/' .config
-    else
-        echo "CONFIG_PACKAGE_sqm-scripts=n" >> .config
-    fi
-fi
