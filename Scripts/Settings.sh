@@ -77,15 +77,11 @@ sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 #去掉luci版本后缀
 sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
-#MT7981PPE名称
-if grep -q -E "CONFIG_PACKAGE_.*mt7981.*=y" .config 2>/dev/null; then
-    echo "检测到当前编译目标为MT7981平台，开始修改 cpuusage 脚本..."
-    sed -i 's|/sys/kernel/debug/ppe\*/entries|/sys/kernel/debug/ppe0/entries|g' target/linux/mediatek/filogic/base-files/sbin/cpuusage
-    sed -i 's|name=\$(basename.*|name="PPE"|g' target/linux/mediatek/filogic/base-files/sbin/cpuusage
-    echo "MT7981 PPE名称修改完成！"
-fi
-
-#删除zram的开机自启软链接
+#开启zram的lz4默认算法并禁用开机自启
 if [ -f "include/rootfs.mk" ]; then
-    sed -i '/clean_ipkg,\$(1)/a \	rm -f \$(1)/etc/rc.d/S15zram' include/rootfs.mk
+    sed -i '/\$(call prepare_rootfs,\$(1),\$(ROOTFS_KILL))/a \	rm -f \$(1)/etc/rc.d/S15zram' include/rootfs.mk
+fi
+if [ -f "package/system/zram-swap/files/zram.init" ]; then
+    sed -i '/# default to lzo, which is always available/{n;s/"lzo"/"lz4"/;}' \
+      package/system/zram-swap/files/zram.init
 fi
