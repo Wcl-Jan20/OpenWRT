@@ -84,11 +84,11 @@ if [ -f "include/rootfs.mk" ]; then
     sed -i '/clean_ipkg,\$(1)/a \	rm -f \$(1)/etc/rc.d/S15zram' include/rootfs.mk
 fi
 
-#禁用 mtk、rk、x86 平台的 luci-app-sqm
+#禁用 mtk、rk、x86 平台的 sqm-scripts-nss
 if grep -qE "^CONFIG_TARGET_(mediatek|rockchip|x86).*=y" .config; then
-    if grep -q "^CONFIG_PACKAGE_luci-app-sqm=" .config; then
-        sed -i 's/^CONFIG_PACKAGE_luci-app-sqm=.*/CONFIG_PACKAGE_luci-app-sqm=n/' .config
+    if grep -q "^CONFIG_PACKAGE_sqm-scripts-nss=" .config; then
+        sed -i 's/^CONFIG_PACKAGE_sqm-scripts-nss=.*/CONFIG_PACKAGE_sqm-scripts-nss=n/' .config
     else
-        echo "CONFIG_PACKAGE_luci-app-sqm=n" >> .config
+        echo "CONFIG_PACKAGE_sqm-scripts-nss=n" >> .config
     fi
 fi
