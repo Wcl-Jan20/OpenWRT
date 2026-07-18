@@ -85,3 +85,10 @@ if [ -f "package/system/zram-swap/files/zram.init" ]; then
     sed -i '/# default to lzo, which is always available/{n;s/"lzo"/"lz4"/;}' \
       package/system/zram-swap/files/zram.init
 fi
+
+#禁用mtk平台sqm nss-zk
+if grep -q "^CONFIG_PACKAGE_sqm-scripts-nss=" .config; then
+    sed -i 's/^CONFIG_PACKAGE_sqm-scripts-nss=.*/CONFIG_PACKAGE_sqm-scripts-nss=n/' .config
+else
+    echo "CONFIG_PACKAGE_sqm-scripts-nss=n" >> .config
+fi
