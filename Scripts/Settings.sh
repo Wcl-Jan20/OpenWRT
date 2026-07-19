@@ -44,8 +44,24 @@ if [ -f "$GITHUB_WORKSPACE/Config/PRIVATE.txt" ]; then
 fi
 
 #手动调整的插件
-if [ -n "$WRT_PACKAGE" ]; then
-	echo -e "$WRT_PACKAGE" >> ./.config
+if [ -n "$WRT_PACKAGE" ] && [ -f .config ]; then
+    echo "$WRT_PACKAGE" | tr ' ' '\n' | sed '/^$/d' | while read -r line; do
+        if [[ "$line" == *"="* ]]; then
+            pkg_name="${line%=*}"
+            state="${line#*=}"
+        else
+            pkg_name="$line"
+            state="y"
+        fi
+        full_key="CONFIG_PACKAGE_${pkg_name}"
+        sed -i "/^${full_key}=/d" ./.config
+        sed -i "/^# ${full_key} is not set/d" ./.config
+        if [ "$state" = "y" ]; then
+            echo "${full_key}=y" >> ./.config
+        elif [ "$state" = "n" ]; then
+            echo "# ${full_key} is not set" >> ./.config
+        fi
+    done
 fi
 
 #无WIFI配置标志
