@@ -1,7 +1,7 @@
 #自用插件
 #CONFIG_USE_APK=n
-#CONFIG_PACKAGE_sqm-scripts-nss=y
-#CONFIG_PACKAGE_luci-app-sqm=y
+CONFIG_PACKAGE_luci-app-sqm=y
+CONFIG_PACKAGE_sqm-scripts-nss=y
 CONFIG_PACKAGE_zoneinfo-asia=y
 CONFIG_PACKAGE_luci-mod-rpc=y
 CONFIG_PACKAGE_luci-app-store=y
