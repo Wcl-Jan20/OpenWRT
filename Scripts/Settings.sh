@@ -104,5 +104,5 @@ if grep -q 'zram_comp_algo="lzo"' package/system/zram-swap/files/zram.init; then
     sed -i 's/zram_comp_algo="lzo"/zram_comp_algo="lz4"/g' package/system/zram-swap/files/zram.init
     echo "zram默认lz4已启用"
 else
-    echo "lz4未启用"
+    echo "lz4默认失败!"
 fi
