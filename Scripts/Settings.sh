@@ -100,9 +100,3 @@ if ! grep -q "S15zram" include/rootfs.mk; then
     sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
 	echo "禁用zram开机启动"
 fi
-if grep -q 'zram_comp_algo="lzo"' package/system/zram-swap/files/zram.init; then
-    sed -i 's/zram_comp_algo="lzo"/zram_comp_algo="lz4"/g' package/system/zram-swap/files/zram.init
-    echo "zram默认lz4已启用"
-else
-    echo "lz4默认失败!"
-fi
