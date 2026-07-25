@@ -83,9 +83,16 @@ fi
 sed -i '/Target Platform/d' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 sed -i '38,47d' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/20_memory.js
 rm -rf feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/25_storage.js
+#usr+sys+nss
 if [ -f "target/linux/qualcommax/base-files/sbin/cpuusage" ]; then
-	sed -i 's/ECM://g' target/linux/qualcommax/base-files/sbin/cpuusage
-	sed -i 's/HWE/NPU/g' target/linux/qualcommax/base-files/sbin/cpuusage
+	cat << 'EOF' > target/linux/qualcommax/base-files/sbin/cpuusage
+#!/bin/sh
+read -r usr sys < <(top -bn1 | awk 'NR==2 {print $2, $4}')
+cpu_load="USR: ${usr} SYS: ${sys}"
+nss_load="$(awk 'NR == 6 { print $2; exit }' /sys/kernel/debug/qca-nss-drv/stats/cpu_load_ubi 2>/dev/null)"
+echo -n "${cpu_load} NSS: ${nss_load:-N/A}"
+EOF
+echo "usr+sys+nss已修改"
 fi
 
 #关闭重绑定保护及缓存
