@@ -101,7 +101,7 @@ sed -i "/option ra_default/a \\\toption dns_service '0'" package/network/service
 sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 
 #去掉luci版本后缀并显示年份
-sed -i 's#_('\''Firmware Version'\''), (L.isObject(boardinfo.release) ? boardinfo.release.description + '\'' / '\'' : '\'\''\'') + (luciversion || '\'\''\''),#_('\''Firmware Version'\''), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '\'\''\'').replace('\''SNAPSHOT r0'\'', '\''r'$(date +%Y)'\'') : '\'\''\''),#g' feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
+sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '').replace('SNAPSHOT r0', 'r$(date +%Y)') : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
 #禁用zram开机自启
 if ! grep -q "S15zram" include/rootfs.mk; then
