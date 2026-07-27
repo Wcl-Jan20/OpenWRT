@@ -97,7 +97,7 @@ fi
 
 #关闭重绑定保护,本地v6dns及缓存
 sed -i 's/option rebind_protection 1/option rebind_protection 0/g' package/network/services/dnsmasq/files/dhcp.conf
-sed -i "s/option ra_default '1'/option ra_default '1'\n\toption dns_service '0'/g" package/network/services/dnsmasq/files/dhcp.conf
+sed -i "s/option ra 'hybrid'/option ra 'hybrid'\n\toption dns_service '0'/g" package/network/services/dnsmasq/files/dhcp.conf
 sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 
 #去掉luci版本后缀并显示年份
