@@ -95,8 +95,9 @@ EOF
 echo "usr+sys+nss已修改"
 fi
 
-#关闭重绑定保护及缓存
+#关闭重绑定保护,本地v6dns及缓存
 sed -i 's/option rebind_protection 1/option rebind_protection 0/g' package/network/services/dnsmasq/files/dhcp.conf
+sed -i "/option ra_default/a \\\toption dns_service '0'" package/network/services/dnsmasq/files/dhcp.conf
 sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 
 #去掉luci版本后缀
