@@ -70,7 +70,8 @@ UPDATE_PACKAGE "timecontrol" "sirpdboy/luci-app-timecontrol" "main"
 
 UPDATE_PACKAGE "sing-box" "77160860/OpenWRT" "main" "pkg"
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
-#UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/sqm-scripts-nss" "main"
+UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/sqm-scripts-nss" "main"
+#UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/nss-packages" "edma-nss" "pkg"
 UPDATE_PACKAGE "luci-app-podman" "Zerogiven-OpenWRT-Packages/luci-app-podman" "main"
 #更新软件包版本
 UPDATE_VERSION() {
