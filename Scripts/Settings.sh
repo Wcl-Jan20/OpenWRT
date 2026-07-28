@@ -103,11 +103,11 @@ sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 #去掉luci版本后缀并显示年份
 sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '').replace('SNAPSHOT r0', 'r$(date +%Y)') : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
+#sqm去ipt修复ipk支持
+sed -i 's/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb +iptables +iptables-mod-ipopt/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb/g' feeds/packages/net/sqm-scripts/Makefile
+
 #禁用zram开机自启
 if ! grep -q "S15zram" include/rootfs.mk; then
     sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
 	echo "禁用zram开机启动"
 fi
-
-#sqm修复ipt支持
-sed -i 's/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb +iptables +iptables-mod-ipopt/DEPENDS:=+tc +ip +kmod-ifb/g' feeds/packages/net/sqm-scripts/Makefile
