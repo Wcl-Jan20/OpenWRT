@@ -56,7 +56,6 @@ UPDATE_PACKAGE "nikki" "nikkinikki-org/OpenWrt-nikki" "main"
 UPDATE_PACKAGE "openclash" "vernesong/OpenClash" "dev" "pkg"
 UPDATE_PACKAGE "passwall2" "Openwrt-Passwall/openwrt-passwall2" "main" "pkg"
 
-UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
 UPDATE_PACKAGE "ddns-go" "sirpdboy/luci-app-ddns-go" "main"
 UPDATE_PACKAGE "diskmanager" "4IceG/luci-app-mini-diskmanager" "main"
 UPDATE_PACKAGE "easytier" "EasyTier/luci-app-easytier" "main"
@@ -66,13 +65,15 @@ UPDATE_PACKAGE "openlist2" "sbwml/luci-app-openlist2" "main"
 UPDATE_PACKAGE "partexp" "sirpdboy/luci-app-partexp" "main"
 UPDATE_PACKAGE "quickfile" "sbwml/luci-app-quickfile" "main"
 UPDATE_PACKAGE "timecontrol" "sirpdboy/luci-app-timecontrol" "main"
-#UPDATE_PACKAGE "viking" "VIKINGYFY/packages" "main" "" "axonhub gecoosac luci-app-timewol luci-app-wolplus luci-app-wolultra"
+UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
+UPDATE_PACKAGE "luci-app-gecoosac" "laipeng668/luci-app-gecoosac" "main"
 
 UPDATE_PACKAGE "sing-box" "77160860/OpenWRT" "main" "pkg"
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
 UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/sqm-scripts-nss" "main"
 #UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/nss-packages" "edma-nss" "pkg"
 UPDATE_PACKAGE "luci-app-podman" "Zerogiven-OpenWRT-Packages/luci-app-podman" "main"
+UPDATE_PACKAGE "luci-app-easymesh" "kenzok8/openwrt-packages" "main" "pkg"
 #更新软件包版本
 UPDATE_VERSION() {
 	local PKG_NAME=$1
