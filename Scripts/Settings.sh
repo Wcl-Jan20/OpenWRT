@@ -103,15 +103,17 @@ sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 #去掉luci版本后缀并显示年份
 sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '').replace('SNAPSHOT r0', 'r$(date +%Y)') : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
-#sqm去ipt修复ipk支持
+#sqm去ipt修复ipk支持及启动延迟
 sed -i 's/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb +iptables +iptables-mod-ipopt/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb/g' feeds/packages/net/sqm-scripts/Makefile
 
-sed -i '/$(eval $(call BuildPackage,sqm-scripts))/i \
+if ! grep -q "Build/Prepare" feeds/packages/net/sqm-scripts/Makefile; then
+    sed -i '/$(eval $(call BuildPackage,sqm-scripts))/i\
 define Build/Prepare\n\
 	$(call Build/Prepare/Default)\n\
 	sed -i "s/START=50/START=95/g" $(PKG_BUILD_DIR)/platform/openwrt/sqm-init\n\
 	sed -i "/export SQM_VERBOSITY_MIN=5/i \	sleep 9" $(PKG_BUILD_DIR)/platform/openwrt/sqm-init\n\
 endef\n' feeds/packages/net/sqm-scripts/Makefile
+fi
 
 #禁用zram开机自启
 if ! grep -q "S15zram" include/rootfs.mk; then
