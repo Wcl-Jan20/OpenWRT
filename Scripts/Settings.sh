@@ -106,6 +106,15 @@ sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.rele
 #sqm去ipt修复ipk支持
 sed -i 's/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb +iptables +iptables-mod-ipopt/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb/g' feeds/packages/net/sqm-scripts/Makefile
 
+if ! grep -q "Build/Prepare" feeds/packages/net/sqm-scripts/Makefile; then
+    sed -i '/$(eval $(call BuildPackage,sqm-scripts))/i\
+define Build/Prepare\n\
+	$(call Build/Prepare/Default)\n\
+	sed -i "s/START=50/START=95/g" $(PKG_BUILD_DIR)/platform/openwrt/sqm-init\n\
+	echo "=== sqm START=95 修改完成 ==="\n\
+endef\n' feeds/packages/net/sqm-scripts/Makefile
+fi
+
 #禁用zram开机自启
 if ! grep -q "S15zram" include/rootfs.mk; then
     sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
