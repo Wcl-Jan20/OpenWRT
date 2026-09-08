@@ -92,18 +92,13 @@ cpu_load="USR: ${usr} SYS: ${sys}"
 nss_load="$(awk 'NR == 6 { print $2; exit }' /sys/kernel/debug/qca-nss-drv/stats/cpu_load_ubi 2>/dev/null)"
 echo -n "${cpu_load} NSS: ${nss_load:-N/A}"
 EOF
-echo "usr+sys+nss已修改"
+echo "cpu状态已修改:usr+sys+nss"
 fi
-
-#关闭重绑定保护,本地v6dns及缓存
-sed -i 's/option rebind_protection 1/option rebind_protection 0/g' package/network/services/dnsmasq/files/dhcp.conf
-sed -i 's/config dhcp.*lan/&\n\toption dns_service 0/g' package/network/services/dnsmasq/files/dhcp.conf
-sed -i 's/8000/0/g' package/network/services/dnsmasq/files/dhcp.conf
 
 #去掉luci版本后缀并显示年份
 sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '').replace('SNAPSHOT r0', 'r$(date +%Y)') : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
-#sqm去ipt修复ipk支持及启动延迟
+#sqm修复ipk支持及启动延迟
 sed -i 's/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb +iptables +iptables-mod-ipopt/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb/g' feeds/packages/net/sqm-scripts/Makefile
 
 if ! grep -q "Build/Prepare" feeds/packages/net/sqm-scripts/Makefile; then
