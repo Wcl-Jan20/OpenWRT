@@ -71,7 +71,7 @@ UPDATE_PACKAGE "luci-app-tailscale" "asvow/luci-app-tailscale" "main"
 UPDATE_PACKAGE "luci-app-gecoosac" "laipeng668/luci-app-gecoosac" "main"
 
 UPDATE_PACKAGE "sing-box" "77160860/OpenWRT" "main" "pkg"
-UPDATE_PACKAGE "mihomo-meta" "77160860/OpenWRT" "main" "pkg"
+UPDATE_PACKAGE "mihomo" "77160860/OpenWRT" "main" "pkg"
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
 UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/sqm-scripts-nss" "main"
 #UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/nss-packages" "edma-nss" "pkg"
