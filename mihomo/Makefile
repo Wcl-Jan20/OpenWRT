@@ -51,7 +51,6 @@ define Build/Prepare
 	chmod +x $(PKG_BUILD_DIR)/mihomo
 endef
 
-# 配置与编译过程：跳过（直接使用预编译二进制）
 define Build/Configure
 endef
 
