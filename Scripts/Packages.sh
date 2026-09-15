@@ -72,6 +72,11 @@ UPDATE_PACKAGE "luci-app-gecoosac" "laipeng668/luci-app-gecoosac" "main"
 
 UPDATE_PACKAGE "sing-box" "77160860/OpenWRT" "main" "pkg"
 UPDATE_PACKAGE "mihomo" "77160860/OpenWRT" "main" "pkg"
+rm -rf ./OpenWrt-nikki/mihomo-meta
+mkdir -p ./OpenWrt-nikki/mihomo-meta
+cp -f "$GITHUB_WORKSPACE/mihomo/Makefile" ./OpenWrt-nikki/mihomo-meta/Makefile
+rm -rf ./mihomo
+
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
 UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/sqm-scripts-nss" "main"
 #UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/nss-packages" "edma-nss" "pkg"
