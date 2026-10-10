@@ -38,7 +38,7 @@ jobs:
       matrix:
         CONFIG: [IPQ60XX, IPQ807X]
         SOURCE: [Wcl-Jan20/immortalwrt]
-        BRANCH: [nss6.18.39]
+        BRANCH: [main]
 
     #调用公用编译核心WRT-CORE.yml
     uses: ./.github/workflows/WRT-CORE.yml
