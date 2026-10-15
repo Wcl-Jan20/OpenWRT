@@ -114,7 +114,7 @@ endef\n' feeds/packages/net/sqm-scripts/Makefile
 fi
 
 #禁用zram开机自启
-if ! grep -q "S15zram" include/rootfs.mk; then
-    sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
-	echo "禁用zram开机启动"
-fi
+#if ! grep -q "S15zram" include/rootfs.mk; then
+#    sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
+#	echo "禁用zram开机启动"
+#fi
