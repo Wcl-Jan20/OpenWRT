@@ -95,6 +95,36 @@ EOF
 echo "cpu状态已修改:usr+sys+nss"
 fi
 
+#filogic PPE显示:MT7981实际只有1个PPE,隐藏PPE1并把PPE0显示为PPE
+FILOGIC_CPUUSAGE="./target/linux/mediatek/filogic/base-files/sbin/cpuusage"
+if [ -f "$FILOGIC_CPUUSAGE" ]; then
+	cat << 'EOF' > "$FILOGIC_CPUUSAGE"
+#!/bin/sh
+# Copyright (C) 2024 ZqinKing <zqinking23@gmail.com>
+read -r usr sys < <(top -bn1 | awk '/^CPU:/ {print $2, $4; exit}')
+output="USR: ${usr} SYS: ${sys}"
+#MT7981只有1个PPE:隐藏PPE1,并把PPE0显示为PPE
+is_mt7981=0
+for dt in /proc/device-tree/compatible /sys/firmware/devicetree/base/compatible; do
+	[ -f "$dt" ] || continue
+	if tr '\0' '\n' < "$dt" | grep -q 'mediatek,mt7981'; then
+		is_mt7981=1
+	fi
+	break
+done
+for ppe in /sys/kernel/debug/ppe*/entries; do
+	[ -f "$ppe" ] || continue
+	name="$(basename "$(dirname "$ppe")" | tr 'a-z' 'A-Z')"
+	[ "$is_mt7981" = "1" ] && [ "$name" = "PPE1" ] && continue
+	[ "$is_mt7981" = "1" ] && name="PPE"
+	read -r total ipv4 ipv6 < <(awk '/IPv4/{a++}/IPv6/{b++} END {print NR, a+0, b+0}' "$ppe")
+	[ -n "$total" ] && output="${output} ${name}: ${total} (IPv4: ${ipv4} IPv6: ${ipv6})"
+done
+echo -n "$output"
+EOF
+	echo "MT7981 PPE显示已调整:PPE0显示为PPE"
+fi
+
 #去掉luci版本后缀并显示年份
 sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '').replace('SNAPSHOT r0', 'r$(date +%Y)') : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
@@ -118,3 +148,19 @@ fi
 #    sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
 #	echo "禁用zram开机启动"
 #fi
+#zram默认大小改为内存的1/3,并默认使用lz4压缩
+ZRAM_INIT="./package/system/zram-swap/files/zram.init"
+if [ -f "$ZRAM_INIT" ]; then
+	#ram_size单位是kB: ram_size/1024/3 => MB,即 1/3 内存
+	sed -i 's|echo \$(( ram_size / 2048 ))|echo $(( ram_size / 3072 ))|' "$ZRAM_INIT"
+	#同步更新注释
+	sed -i 's|# e.g. 6mb for 16mb-routers or 61mb for 128mb-routers|# use 1/3 of RAM, e.g. 5mb for 16mb-routers or 40mb for 128mb-routers|' "$ZRAM_INIT"
+	#默认压缩算法 lzo -> lz4
+	sed -i 's|zram_comp_algo="lzo"|zram_comp_algo="lz4"|' "$ZRAM_INIT"
+	sed -i 's|# default to lzo, which is always available|# default to lz4|' "$ZRAM_INIT"
+	if grep -q 'ram_size / 3072' "$ZRAM_INIT"; then
+		echo "zram已调整: 1/3内存 + lz4"
+	else
+		echo "警告: zram.init 默认大小替换失败,请检查上游是否改动了该文件" >&2
+	fi
+fi
