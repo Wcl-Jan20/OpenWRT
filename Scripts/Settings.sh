@@ -149,6 +149,9 @@ define Build/Prepare\n\
 endef\n' feeds/packages/net/sqm-scripts/Makefile
 fi
 
+# 本配置不使用扫描仪,使用openwrt-25.12软件源，删掉可避免 prepare-tmpinfo 组 id 冲突
+rm -rf ./package/feeds/packages/sane-backends
+
 #禁用zram开机自启
 #if ! grep -q "S15zram" include/rootfs.mk; then
 #    sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
