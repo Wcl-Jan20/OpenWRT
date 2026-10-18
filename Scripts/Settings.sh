@@ -125,6 +125,32 @@ EOF
 	echo "MT7981 PPE显示已调整:PPE0显示为PPE"
 fi
 
+# 25.12 feeds fix
+for mk in $(grep -rl --include=Makefile '^[[:space:]]*USERID' ./feeds 2>/dev/null); do
+	perl -i -pe '
+		BEGIN {
+			%hw = (audio => 29, "audio-capture" => 32, midi => 55,
+			       video => 40, "video-capture" => 36, render => 43,
+			       input => 41, dvb => 49, kvm => 34, lp => 7,
+			       scanner => 47, hidraw => 48);
+		}
+		if (/^(\s*USERID:=)(.+)$/) {
+			my ($pre, $spec) = ($1, $2);
+			my @f = split(/:/, $spec, 3);
+			for my $i (1 .. 2) {
+				next unless defined $f[$i];
+				my @g = split(/,/, $f[$i]);
+				for my $j (0 .. $#g) {
+					my ($n) = split(/=/, $g[$j], 2);
+					$g[$j] = "$n=$hw{$n}" if exists $hw{$n};
+				}
+				$f[$i] = join(",", @g);
+			}
+			$_ = $pre . join(":", @f) . "\n";
+		}
+	' "$mk"
+done
+
 #去掉(OpenWrt U-Boot layout)后缀
 if [ -d "./target/linux/mediatek/dts" ]; then
 	find ./target/linux/mediatek/dts -type f -name '*.dts' -exec sed -i 's/ (OpenWrt U-Boot layout)//g' {} +
