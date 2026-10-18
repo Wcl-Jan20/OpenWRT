@@ -118,3 +118,19 @@ fi
 #    sed -i "/clean_ipkg,\$(1)/a $(printf '\t')rm -f \$(1)/etc/rc.d/S15zram" include/rootfs.mk
 #	echo "禁用zram开机启动"
 #fi
+#zram默认大小改为内存的1/3,并默认使用lz4压缩
+ZRAM_INIT="./package/system/zram-swap/files/zram.init"
+if [ -f "$ZRAM_INIT" ]; then
+	#ram_size单位是kB: ram_size/1024/3 => MB,即 1/3 内存
+	sed -i 's|echo \$(( ram_size / 2048 ))|echo $(( ram_size / 3072 ))|' "$ZRAM_INIT"
+	#同步更新注释
+	sed -i 's|# e.g. 6mb for 16mb-routers or 61mb for 128mb-routers|# use 1/3 of RAM, e.g. 5mb for 16mb-routers or 40mb for 128mb-routers|' "$ZRAM_INIT"
+	#默认压缩算法 lzo -> lz4
+	sed -i 's|zram_comp_algo="lzo"|zram_comp_algo="lz4"|' "$ZRAM_INIT"
+	sed -i 's|# default to lzo, which is always available|# default to lz4|' "$ZRAM_INIT"
+	if grep -q 'ram_size / 3072' "$ZRAM_INIT"; then
+		echo "zram已调整: 1/3内存 + lz4"
+	else
+		echo "警告: zram.init 默认大小替换失败,请检查上游是否改动了该文件" >&2
+	fi
+fi
