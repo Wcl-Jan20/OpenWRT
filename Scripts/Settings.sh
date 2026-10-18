@@ -125,6 +125,12 @@ EOF
 	echo "MT7981 PPE显示已调整:PPE0显示为PPE"
 fi
 
+#去掉(OpenWrt U-Boot layout)后缀
+if [ -d "./target/linux/mediatek/dts" ]; then
+	find ./target/linux/mediatek/dts -type f -name '*.dts' -exec sed -i 's/ (OpenWrt U-Boot layout)//g' {} +
+	echo "已去掉型号中的(OpenWrt U-Boot layout)后缀"
+fi
+
 #去掉luci版本后缀并显示年份
 sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.release.description + ' / ' : '') + (luciversion || ''),#_('Firmware Version'), (L.isObject(boardinfo.release) ? (boardinfo.release.description || '').replace('SNAPSHOT r0', 'r$(date +%Y)') : ''),#g" feeds/luci/modules/luci-mod-status/htdocs/luci-static/resources/view/status/include/10_system.js
 
