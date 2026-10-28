@@ -163,17 +163,47 @@ sed -i "s#_('Firmware Version'), (L.isObject(boardinfo.release) ? boardinfo.rele
 #为fakeip关闭重绑定保护
 sed -i 's/option rebind_protection 1/option rebind_protection 0/g' package/network/services/dnsmasq/files/dhcp.conf
 
-#sqm修复ipk支持及启动延迟
-sed -i 's/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb +iptables +iptables-mod-ipopt/DEPENDS:=+tc +ip +kmod-sched-cake +kmod-ifb/g' feeds/packages/net/sqm-scripts/Makefile
-
-if ! grep -q "Build/Prepare" feeds/packages/net/sqm-scripts/Makefile; then
-    sed -i '/$(eval $(call BuildPackage,sqm-scripts))/i\
+# ===== SQM 开机自启修复=====
+# 1) sqm 启动优先级 50 → 98
+sed -i 's/ +iptables +iptables-mod-ipopt//' feeds/packages/net/sqm-scripts/Makefile
+grep -q "Build/Prepare" feeds/packages/net/sqm-scripts/Makefile || sed -i '/BuildPackage,sqm-scripts/i\
 define Build/Prepare\n\
 	$(call Build/Prepare/Default)\n\
-	sed -i "s/START=50/START=95/g" $(PKG_BUILD_DIR)/platform/openwrt/sqm-init\n\
-	sed -i "/export SQM_VERBOSITY_MIN=5/i \	sleep 9" $(PKG_BUILD_DIR)/platform/openwrt/sqm-init\n\
+	sed -i "s/START=50/START=98/" $(PKG_BUILD_DIR)/platform/openwrt/sqm-init\n\
 endef\n' feeds/packages/net/sqm-scripts/Makefile
-fi
+
+# 2) sqm-guard：S98 起不来时等 WAN 载波后重试，最多 10 轮
+B=package/base-files/files/etc
+mkdir -p $B/init.d $B/rc.d
+cat > $B/init.d/sqm-guard <<'GUARD'
+#!/bin/sh /etc/rc.common
+START=99
+start() {
+	/etc/init.d/sqm enabled || return 0
+	uci -q show sqm 2>/dev/null | grep -q "enabled='1'" || { logger -t sqm-guard "no enabled queue, skip"; return 0; }
+	(
+	logger -t sqm-guard "waiting for wan carrier"
+	i=0
+	while [ $i -lt 10 ]; do
+		i=$((i+1))
+		[ "$(cat /sys/class/net/wan/carrier 2>/dev/null)" = 1 ] || { sleep 5; continue; }
+		if tc qdisc show dev wan 2>/dev/null | grep -q nsstbl; then
+			logger -t sqm-guard "already active"
+			exit 0
+		fi
+		modprobe qca-nss-qdisc 2>/dev/null
+		/etc/init.d/sqm restart >/dev/null 2>&1
+		sleep 2
+		tc qdisc show dev wan 2>/dev/null | grep -q nsstbl && { logger -t sqm-guard "shaping active #$i"; exit 0; }
+		sleep 3
+	done
+	logger -t sqm-guard "give up after $i attempts"
+	) &
+}
+stop() { :; }
+GUARD
+chmod 755 $B/init.d/sqm-guard
+ln -sf ../init.d/sqm-guard $B/rc.d/S99sqm-guard
 
 #禁用zram开机自启
 #if ! grep -q "S15zram" include/rootfs.mk; then
