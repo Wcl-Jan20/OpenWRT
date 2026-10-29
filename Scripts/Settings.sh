@@ -186,9 +186,6 @@ if [ -f "$ZRAM_INIT" ]; then
 	fi
 fi
 
-# ===== PPE QoS 流量整形 =====
-# luci-app-qca-ppe-qos 的 Makefile 用相对路径 include ../../luci.mk，提取到 package/ 后改成绝对路径
-[ -f ./package/luci-app-qca-ppe-qos/Makefile ] && sed -i 's|include ../../luci.mk|include $(TOPDIR)/feeds/luci/luci.mk|' ./package/luci-app-qca-ppe-qos/Makefile
 # 给标准 sqm-scripts 注入 ppe_cake.qos（PPE shaper device + CAKE + L4S）
 git clone --depth=1 --single-branch --branch ppe-cake "https://github.com/JuliusBairaktaris/sqm-scripts.git" .sqm-ppe-cake 2>/dev/null
 if [ -f ".sqm-ppe-cake/src/ppe_cake.qos" ]; then
