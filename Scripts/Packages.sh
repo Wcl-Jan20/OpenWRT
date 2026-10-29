@@ -80,7 +80,6 @@ cp -f "$GITHUB_WORKSPACE/mihomo/Makefile" ./OpenWrt-nikki/mihomo-meta/Makefile
 rm -rf ./mihomo
 
 UPDATE_PACKAGE "luci-app-store" "linkease/istore" "main"
-UPDATE_PACKAGE "luci-app-qca-ppe-qos" "JuliusBairaktaris/luci" "luci-app-ppe-qos" "pkg"
 #UPDATE_PACKAGE "sqm-scripts-nss" "JuliusBairaktaris/sqm-scripts-nss" "main"
 UPDATE_PACKAGE "luci-app-podman" "Zerogiven-OpenWRT-Packages/luci-app-podman" "main"
 UPDATE_PACKAGE "luci-app-easymesh" "kenzok8/openwrt-packages" "master" "pkg"
