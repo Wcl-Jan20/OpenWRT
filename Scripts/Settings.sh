@@ -187,20 +187,13 @@ if [ -f "$ZRAM_INIT" ]; then
 fi
 
 # 给标准 sqm-scripts 注入 ppe_cake.qos（PPE shaper device + CAKE + L4S）
-git clone --depth=1 --single-branch --branch ppe-cake "https://github.com/JuliusBairaktaris/sqm-scripts.git" .sqm-ppe-cake 2>/dev/null
-if [ -f ".sqm-ppe-cake/src/ppe_cake.qos" ]; then
-	mkdir -p ./feeds/packages/net/sqm-scripts/patches
-	for F in ppe_cake.qos ppe_cake.qos.help; do
-		N=$(wc -l < ".sqm-ppe-cake/src/$F")
-		{
-			echo "--- a/src/$F"
-			echo "+++ b/src/$F"
-			echo "@@ -0,0 +1,$N @@"
-			sed 's/^/+/' ".sqm-ppe-cake/src/$F"
-		} > "./feeds/packages/net/sqm-scripts/patches/200-$F.patch"
-	done
-	echo "ppe_cake.qos 已注入 sqm-scripts"
-else
-	echo "警告: 拉取 ppe_cake.qos 失败，sqm 将退回标准脚本"
-fi
-rm -rf .sqm-ppe-cake
+mkdir -p ./feeds/packages/net/sqm-scripts/patches
+for F in ppe_cake.qos ppe_cake.qos.help; do
+	curl -fsL "https://raw.githubusercontent.com/JuliusBairaktaris/sqm-scripts/ppe-cake/src/$F" -o "/tmp/$F" || { echo "警告: 拉取 $F 失败，sqm 将退回标准脚本"; continue; }
+	{
+		echo "--- a/src/$F"
+		echo "+++ b/src/$F"
+		echo "@@ -0,0 +1,$(wc -l < "/tmp/$F") @@"
+		sed 's/^/+/' "/tmp/$F"
+	} > "./feeds/packages/net/sqm-scripts/patches/200-$F.patch"
+done
