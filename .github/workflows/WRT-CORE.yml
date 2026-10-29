@@ -181,6 +181,10 @@ jobs:
         run: |
           cd ./wrt/
 
+          # 将 packages/luci feed 固定到 openwrt-25.12 分支（与主仓库版本一致）
+          sed -i '/^src-git packages /s/$/;openwrt-25.12/' feeds.conf.default
+          sed -i '/^src-git luci /s/$/;openwrt-25.12/' feeds.conf.default
+
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
