@@ -185,6 +185,10 @@ jobs:
           sed -i '/^src-git packages /s/$/;openwrt-25.12/' feeds.conf.default
           sed -i '/^src-git luci /s/$/;openwrt-25.12/' feeds.conf.default
 
+          # 删除 Airoha PON 光猫 feed（IPQ不需要；且其 main 分支与 25.12 不兼容，会导致 feeds 扫描报错）
+          sed -i '/^src-git pon_drivers /d' feeds.conf.default
+          sed -i '/^src-git pon_userspace /d' feeds.conf.default
+
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
