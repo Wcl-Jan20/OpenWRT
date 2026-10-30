@@ -181,6 +181,9 @@ jobs:
         run: |
           cd ./wrt/
 
+          sed -i '/^src-git packages /s/$/;openwrt-25.12/' feeds.conf.default
+          sed -i '/^src-git luci /s/$/;openwrt-25.12/' feeds.conf.default
+
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
